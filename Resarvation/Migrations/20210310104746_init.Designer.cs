@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resarvation.Data;
 
 namespace Resarvation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210310104746_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,9 +226,6 @@ namespace Resarvation.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ApprenantId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.Property<int>("Cause")
                         .HasColumnType("int");
 
@@ -240,8 +239,6 @@ namespace Resarvation.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApprenantId");
 
                     b.HasIndex("TypeReservationId");
 
@@ -331,15 +328,9 @@ namespace Resarvation.Migrations
 
             modelBuilder.Entity("Resarvation.Models.Reservation", b =>
                 {
-                    b.HasOne("Resarvation.Models.Apprenant", "Apprenant")
-                        .WithMany()
-                        .HasForeignKey("ApprenantId");
-
                     b.HasOne("Resarvation.Models.TypeReservation", "TypeReservation")
                         .WithMany()
                         .HasForeignKey("TypeReservationId");
-
-                    b.Navigation("Apprenant");
 
                     b.Navigation("TypeReservation");
                 });

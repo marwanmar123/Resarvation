@@ -7,13 +7,13 @@ namespace Resarvation.Models
 {
     public class Reservation
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public DateTime Date { get; set; }
         public bool Status { get; set; }
         public int Cause { get; set; }
 
-        //public Student Student { get; set; }
-        ////public int TypeReservationId { get; set; }
-        //public TypeReservation TypeReservation { get; set; }
+        public Apprenant Apprenant { get; set; }
+        //public int TypeReservationId { get; set; }
+        public TypeReservation TypeReservation { get; set; }
     }
 }

@@ -95,7 +95,7 @@ namespace Resarvation.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    await _userManager.AddToRoleAsync(user, "student");
+                    await _userManager.AddToRoleAsync(user, "apprenant");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

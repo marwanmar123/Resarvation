@@ -9,8 +9,8 @@ using Resarvation.Data;
 namespace Resarvation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210309224141_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210310104920_relationApprennt")]
+    partial class relationApprennt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,6 +80,10 @@ namespace Resarvation.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
@@ -130,6 +134,8 @@ namespace Resarvation.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -215,6 +221,65 @@ namespace Resarvation.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Resarvation.Models.Reservation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ApprenantId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Cause")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("TypeReservationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApprenantId");
+
+                    b.HasIndex("TypeReservationId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("Resarvation.Models.TypeReservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccessNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypeReservations");
+                });
+
+            modelBuilder.Entity("Resarvation.Models.Apprenant", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("Class")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("ResCount")
+                        .HasColumnType("int");
+
+                    b.HasDiscriminator().HasValue("Apprenant");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -264,6 +329,21 @@ namespace Resarvation.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Resarvation.Models.Reservation", b =>
+                {
+                    b.HasOne("Resarvation.Models.Apprenant", "Apprenant")
+                        .WithMany()
+                        .HasForeignKey("ApprenantId");
+
+                    b.HasOne("Resarvation.Models.TypeReservation", "TypeReservation")
+                        .WithMany()
+                        .HasForeignKey("TypeReservationId");
+
+                    b.Navigation("Apprenant");
+
+                    b.Navigation("TypeReservation");
                 });
 #pragma warning restore 612, 618
         }
