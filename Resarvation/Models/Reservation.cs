@@ -13,7 +13,6 @@ namespace Resarvation.Models
         public int Cause { get; set; }
 
         public Apprenant Apprenant { get; set; }
-        //public int TypeReservationId { get; set; }
         public TypeReservation TypeReservation { get; set; }
     }
 }
