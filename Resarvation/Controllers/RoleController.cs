@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Resarvation.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +13,14 @@ namespace Resarvation.Controllers
     public class RoleController : Controller
     {
         RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ApplicationDbContext _db;
 
-        public RoleController(RoleManager<IdentityRole> roleManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, ApplicationDbContext db)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
+            _db = db;
         }
 
         public IActionResult Index()
@@ -121,6 +127,15 @@ namespace Resarvation.Controllers
 
             return View();
         }
+
+
+        public async Task<IActionResult> assign()
+        {
+            ViewData["RoleId"] = new SelectList(_db.Roles.ToList(), "Id", "Name");
+            ViewData["UserId"] = new SelectList(_db.Users.ToList(), "Id", "UserName");
+            return View();
+        }
+
 
     }
 }

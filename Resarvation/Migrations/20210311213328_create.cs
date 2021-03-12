@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Resarvation.Migrations
 {
-    public partial class init : Migration
+    public partial class create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,9 +27,8 @@ namespace Resarvation.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
-                    Discriminator = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false),
                     Class = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    ResCount = table.Column<int>(type: "int", nullable: true),
+                    ResCount = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
@@ -178,11 +177,18 @@ namespace Resarvation.Migrations
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Cause = table.Column<int>(type: "int", nullable: false),
+                    ApprenantId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
                     TypeReservationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_AspNetUsers_ApprenantId",
+                        column: x => x.ApprenantId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reservations_TypeReservations_TypeReservationId",
                         column: x => x.TypeReservationId,
@@ -227,6 +233,11 @@ namespace Resarvation.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_ApprenantId",
+                table: "Reservations",
+                column: "ApprenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_TypeReservationId",
