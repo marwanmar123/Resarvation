@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Resarvation.Data;
+using Resarvation.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace Resarvation.Controllers
     public class RoleController : Controller
     {
         RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly ApplicationDbContext _db;
+        UserManager<IdentityUser> _userManager;
+        ApplicationDbContext _db;
 
         public RoleController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, ApplicationDbContext db)
         {
@@ -129,13 +130,24 @@ namespace Resarvation.Controllers
         }
 
 
-        public async Task<IActionResult> assign()
+        public async Task<IActionResult> AssignRole()
         {
-            ViewData["RoleId"] = new SelectList(_db.Roles.ToList(), "Id", "Name");
-            ViewData["UserId"] = new SelectList(_db.Users.ToList(), "Id", "UserName");
+            ViewData["UserId"] = new SelectList(_db.Apprenants.ToList(), "Id", "UserName");
+            ViewData["RoleId"] = new SelectList(_roleManager.Roles.ToList(), "Id", "Name");
             return View();
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(RoleUser roleUser)
+        {
+            var user = _db.Apprenants.FirstOrDefault(a => a.Id == roleUser.UserId);
+            var r = await _roleManager.FindByIdAsync(roleUser.RoleId);
+            var role = await _userManager.AddToRoleAsync(user, r.Name);
+            if (role.Succeeded)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
     }
 }
