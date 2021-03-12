@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Resarvation.Data;
 using Resarvation.Models;
@@ -21,6 +22,8 @@ namespace Resarvation.Controllers
         // GET: ReservationController
         public ActionResult Index()
         {
+            var srx = _db.Reservations.OrderBy(r => r.Date);
+
             var Result = (from r in _db.Reservations
                           join s in _db.Apprenants
                           on r.Apprenant.Id equals s.Id
