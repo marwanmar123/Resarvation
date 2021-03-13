@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Resarvation.Data;
 using Resarvation.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Resarvation.Controllers
@@ -48,33 +50,27 @@ namespace Resarvation.Controllers
         public ActionResult Reserv()
         {
 
-            var user = User.Identity.Name;
-            var Result = (from r in _db.Reservations
-                          join s in _db.Apprenants
-                          on r.Apprenant.Id equals s.Id
-                          join rt in _db.TypeReservations
-                          on r.TypeReservation.Id equals rt.Id
-                          where s.UserName == user
-                          select new ReservApprenantViewModel
-                          {
-                              Id = s.Id,
-                              UserName = s.UserName,
-                              Email = s.Email,
-                              Date = r.Date,
-                              Cause = r.Cause,
-                              Status = r.Status,
-                              TypeReservation = rt.Name,
-                          }).ToList();
+            //var user = User.Identity.Name;
+            var us = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View("Index", Result);
+            return base.View("Index", (from r in _db.Reservations
+                                       join s in _db.Apprenants
+                                       on r.Apprenant.Id equals s.Id
+                                       join rt in _db.TypeReservations
+                                       on r.TypeReservation.Id equals rt.Id
+                                       where s.Id == us
+                                       select new ReservApprenantViewModel
+                                       {
+                                           Id = s.Id,
+                                           UserName = s.UserName,
+                                           Email = s.Email,
+                                           Date = r.Date,
+                                           Cause = r.Cause,
+                                           Status = r.Status,
+                                           TypeReservation = rt.Name,
+                                       }).ToList());
         }
 
-
-        //public IActionResult Search(string term)
-        //{
-        //    var result = _db.Reservations.Where(b => b.Date == ).ToList();
-        //    return View("Index", result);
-        //}
 
         // GET: ReservationController/Details/5
         public ActionResult Details(int id)
@@ -83,24 +79,44 @@ namespace Resarvation.Controllers
         }
 
         // GET: ReservationController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
+            ViewBag.type = new SelectList(_db.TypeReservations, "Id", "Name");
             return View();
         }
 
         // POST: ReservationController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(ReservApprenantViewModel viewModel)
         {
-            try
+            Apprenant apprenant = new Apprenant()
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+                UserName = viewModel.UserName,
+                Email = viewModel.Email
+            };
+
+            Reservation resarvation = new Reservation()
             {
-                return View();
-            }
+                Date = viewModel.Date,
+                Status = viewModel.Status,
+                Cause = viewModel.Cause
+            };
+
+            TypeReservation type = new TypeReservation() { Name = viewModel.TypeReservation };
+
+            var usId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            _db.Apprenants.Add(apprenant);
+            resarvation.ApprenantId = usId;
+            resarvation.TypeReservation = type;
+            _db.Reservations.Add(resarvation);
+            await _db.SaveChangesAsync();
+
+            ViewBag.type = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservation);
+            return RedirectToAction(nameof(Index));
+
+
         }
 
         // GET: ReservationController/Edit/5

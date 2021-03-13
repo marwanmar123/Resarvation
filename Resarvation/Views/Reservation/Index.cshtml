@@ -8,50 +8,6 @@
 
 
 
-
-@*<form class="d-flex w-50 mx-auto m-2" asp-action="Search" asp-controller="Reservation">
-        <input class="form-control me-2" type="search" name="term" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>*@
-<form asp-action="Index">
-    <p>
-        Search: <input type="date" name="search">
-        <input type="submit" value="Filter" />
-    </p>
-</form>
-
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.UserName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                </tr>
-
-            }
-        </tbody>
-    </table>*@
-
-
-
-
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -103,8 +59,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
                 </td>
             </tr>
         }

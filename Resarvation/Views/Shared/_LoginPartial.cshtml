@@ -21,8 +21,8 @@
 
                 @if (User.IsInRole("admin"))
                 {
-                    <a class="ml-4" href="Role">Role</a>
-                    <a class="ml-4" href="User">Users Controle</a>
+                    <a class="ml-4" asp-controller="Role" asp-action="Index">Role</a>
+                    <a class="ml-4" asp-controller="User" asp-action="Index">Users Controle</a>
                 }
             </div>
 

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resarvation.Data;
 
 namespace Resarvation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210313204345_addautoIncemnt")]
+    partial class addautoIncemnt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,8 +224,9 @@ namespace Resarvation.Migrations
             modelBuilder.Entity("Resarvation.Models.Reservation", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ApprenantId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -252,8 +255,9 @@ namespace Resarvation.Migrations
             modelBuilder.Entity("Resarvation.Models.TypeReservation", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+
+                        .HasColumnType("int")
+                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessNumber")
                         .HasColumnType("int");

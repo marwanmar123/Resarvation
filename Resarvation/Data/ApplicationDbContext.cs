@@ -17,5 +17,6 @@ namespace Resarvation.Data
         public virtual DbSet<Apprenant> Apprenants { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<TypeReservation> TypeReservations { get; set; }
+
     }
 }
