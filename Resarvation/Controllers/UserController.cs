@@ -28,7 +28,7 @@ namespace Resarvation.Controllers
             return View(res);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }

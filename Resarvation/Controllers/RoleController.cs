@@ -32,7 +32,7 @@ namespace Resarvation.Controllers
         }
 
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -130,7 +130,7 @@ namespace Resarvation.Controllers
         }
 
 
-        public async Task<IActionResult> AssignRole()
+        public IActionResult AssignRole()
         {
             ViewData["UserId"] = new SelectList(_db.Apprenants.ToList(), "Id", "UserName");
             ViewData["RoleId"] = new SelectList(_roleManager.Roles.ToList(), "Id", "Name");
