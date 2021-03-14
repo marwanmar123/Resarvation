@@ -129,24 +129,40 @@ namespace Resarvation.Controllers
         }
 
         // GET: ReservationController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string id)
         {
+            var find = _db.Reservations.Find(id);
+            if (find == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.date = find.Date;
+            ViewBag.id = find.TypeReservationId;
+
             return View();
         }
 
         // POST: ReservationController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
+        public async Task<ActionResult> Edit(string id, ReservApprenantViewModel viewModel)
         {
-            try
+            var find = _db.Reservations.Find(id);
+            if (find == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+            find.Id = viewModel.TypeReservationId;
+            find.Date = viewModel.Date;
+
+            //var result = await _db.TypeReservations.UpdateAsync(viewModel);
+            //if (result.Succeeded)
+            //{
+            //    return RedirectToAction(nameof(Index));
+            //}
+            return View();
+
         }
 
         // GET: ReservationController/Delete/5
