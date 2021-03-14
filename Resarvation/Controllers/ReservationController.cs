@@ -27,50 +27,51 @@ namespace Resarvation.Controllers
             //var srx = _db.Reservations.OrderBy(r => r.Date);
 
             var Result = (from r in _db.Reservations
-                          join s in _db.Apprenants
-                          on r.Apprenant.Id equals s.Id
-                          join rt in _db.TypeReservations
-                          on r.TypeReservation.Id equals rt.Id
+                          join a in _db.Apprenants
+                          on r.Apprenant.Id equals a.Id
+                          join tr in _db.TypeReservations
+                          on r.TypeReservation.Id equals tr.Id
 
                           select new ReservApprenantViewModel
                           {
-                              Id = s.Id,
-                              UserName = s.UserName,
-                              Email = s.Email,
+                              Id = a.Id,
+                              UserName = a.UserName,
+                              Email = a.Email,
                               Date = r.Date,
                               Cause = r.Cause,
                               Status = r.Status,
-                              TypeReservationId = rt.Id,
-                              Name = rt.Name,
+                              TypeReservationId = tr.Id,
+                              Name = tr.Name,
                           }).ToList();
 
             return View("Index", Result);
         }
 
 
-        public ActionResult Reserv()
+        public ActionResult History()
         {
 
             //var user = User.Identity.Name;
             var us = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Result = (from r in _db.Reservations
+                          join a in _db.Apprenants
+                          on r.Apprenant.Id equals a.Id
+                          join tr in _db.TypeReservations
+                          on r.TypeReservation.Id equals tr.Id
+                          where a.Id == us
+                          select new ReservApprenantViewModel
+                          {
+                              Id = a.Id,
+                              UserName = a.UserName,
+                              Email = a.Email,
+                              Date = r.Date,
+                              Cause = r.Cause,
+                              Status = r.Status,
+                              TypeReservationId = tr.Id,
+                              Name = tr.Name
+                          }).ToList();
 
-            return base.View("Index", (from r in _db.Reservations
-                                       join s in _db.Apprenants
-                                       on r.Apprenant.Id equals s.Id
-                                       join rt in _db.TypeReservations
-                                       on r.TypeReservation.Id equals rt.Id
-                                       where s.Id == us
-                                       select new ReservApprenantViewModel
-                                       {
-                                           Id = s.Id,
-                                           UserName = s.UserName,
-                                           Email = s.Email,
-                                           Date = r.Date,
-                                           Cause = r.Cause,
-                                           Status = r.Status,
-                                           TypeReservationId = rt.Id,
-                                           Name = rt.Name
-                                       }).ToList());
+            return View(Result);
         }
 
 
