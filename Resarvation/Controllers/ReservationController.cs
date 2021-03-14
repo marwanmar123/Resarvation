@@ -24,7 +24,7 @@ namespace Resarvation.Controllers
         // GET: ReservationController
         public ActionResult Index()
         {
-            var srx = _db.Reservations.OrderBy(r => r.Date);
+            //var srx = _db.Reservations.OrderBy(r => r.Date);
 
             var Result = (from r in _db.Reservations
                           join s in _db.Apprenants
@@ -40,7 +40,8 @@ namespace Resarvation.Controllers
                               Date = r.Date,
                               Cause = r.Cause,
                               Status = r.Status,
-                              TypeReservation = rt.Name,
+                              TypeReservationId = rt.Id,
+                              Name = rt.Name,
                           }).ToList();
 
             return View("Index", Result);
@@ -67,7 +68,8 @@ namespace Resarvation.Controllers
                                            Date = r.Date,
                                            Cause = r.Cause,
                                            Status = r.Status,
-                                           TypeReservation = rt.Name,
+                                           TypeReservationId = rt.Id,
+                                           Name = rt.Name
                                        }).ToList());
         }
 
@@ -81,6 +83,12 @@ namespace Resarvation.Controllers
         // GET: ReservationController/Create
         public IActionResult Create()
         {
+            //var reservationType = _db.TypeReservations.Select(t => new SelectListItem
+            //{
+            //    Value = t.Id,
+            //    Text = t.Name
+            //});
+            //ViewBag.ResType = reservationType;
             ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name");
             return View();
         }
@@ -90,30 +98,30 @@ namespace Resarvation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ReservApprenantViewModel viewModel)
         {
-            Apprenant apprenant = new Apprenant()
-            {
-                UserName = viewModel.UserName,
-                Email = viewModel.Email
-            };
+
 
             Reservation resarvation = new Reservation()
             {
                 Date = viewModel.Date,
                 Status = viewModel.Status,
                 Cause = viewModel.Cause
+
             };
 
-            TypeReservation type = new TypeReservation() { Name = viewModel.TypeReservation };
+            //var typeId = new TypeReservation() { Id = viewModel.Name };
 
             var usId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            _db.Apprenants.Add(apprenant);
+            var type = _db.TypeReservations.Single(t => t.Id == viewModel.TypeReservationId);
+
             resarvation.ApprenantId = usId;
             resarvation.TypeReservation = type;
+
             _db.Reservations.Add(resarvation);
+
             await _db.SaveChangesAsync();
 
-            ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservation); ;
+            ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservationId);
             return RedirectToAction(nameof(Index));
 
 

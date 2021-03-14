@@ -13,6 +13,7 @@ namespace Resarvation.Models
         public DateTime Date { get; set; }
         public string Status { get; set; }
         public string Cause { get; set; }
-        public string TypeReservation { get; set; }
+        public string TypeReservationId { get; set; }
+        public string Name { get; set; }
     }
 }

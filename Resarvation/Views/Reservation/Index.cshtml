@@ -30,7 +30,7 @@
                 @Html.DisplayNameFor(model => model.Cause)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TypeReservation)
+                @Html.DisplayNameFor(model => model.TypeReservationId)
             </th>
             <th></th>
         </tr>
@@ -55,7 +55,7 @@
                     @Html.DisplayFor(modelItem => item.Cause)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TypeReservation)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
