@@ -237,8 +237,8 @@ namespace Resarvation.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int?>("TypeReservationId")
-                        .HasColumnType("int");
+                    b.Property<string>("TypeReservationId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -251,9 +251,9 @@ namespace Resarvation.Migrations
 
             modelBuilder.Entity("Resarvation.Models.TypeReservation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.Property<int>("AccessNumber")
                         .HasColumnType("int");

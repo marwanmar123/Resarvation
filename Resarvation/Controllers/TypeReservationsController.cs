@@ -46,7 +46,7 @@ namespace Resarvation.Controllers
         }
 
         // GET: TypeReservations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -63,7 +63,7 @@ namespace Resarvation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,AccessNumber")] TypeReservation typeReservation)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,AccessNumber")] TypeReservation typeReservation)
         {
             if (id != typeReservation.Id)
             {
@@ -96,7 +96,7 @@ namespace Resarvation.Controllers
 
 
 
-        private bool TypeReservationExists(int id)
+        private bool TypeReservationExists(string id)
         {
             return _context.TypeReservations.Any(e => e.Id == id);
         }

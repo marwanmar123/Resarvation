@@ -11,7 +11,7 @@ namespace Resarvation.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int AccessNumber { get; set; }
     }

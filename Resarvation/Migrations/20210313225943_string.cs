@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Resarvation.Migrations
 {
-    public partial class create : Migration
+    public partial class @string : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,8 +27,9 @@ namespace Resarvation.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    Discriminator = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false),
                     Class = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    ResCount = table.Column<int>(type: "int", nullable: false),
+                    ResCount = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
@@ -53,8 +54,7 @@ namespace Resarvation.Migrations
                 name: "TypeReservations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     Name = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     AccessNumber = table.Column<int>(type: "int", nullable: false)
                 },
@@ -175,10 +175,10 @@ namespace Resarvation.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Cause = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    Cause = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     ApprenantId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
-                    TypeReservationId = table.Column<int>(type: "int", nullable: true)
+                    TypeReservationId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>
                 {

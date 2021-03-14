@@ -19,6 +19,7 @@ namespace Resarvation.Models
         public string ApprenantId { get; set; }
         public Apprenant Apprenant { get; set; }
 
+        public string TypeReservationId { get; set; }
         public TypeReservation TypeReservation { get; set; }
     }
 }

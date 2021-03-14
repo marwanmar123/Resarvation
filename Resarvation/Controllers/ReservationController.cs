@@ -81,7 +81,7 @@ namespace Resarvation.Controllers
         // GET: ReservationController/Create
         public IActionResult Create()
         {
-            ViewBag.type = new SelectList(_db.TypeReservations, "Id", "Name");
+            ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name");
             return View();
         }
 
@@ -113,7 +113,7 @@ namespace Resarvation.Controllers
             _db.Reservations.Add(resarvation);
             await _db.SaveChangesAsync();
 
-            ViewBag.type = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservation);
+            ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservation); ;
             return RedirectToAction(nameof(Index));
 
 
@@ -128,7 +128,7 @@ namespace Resarvation.Controllers
         // POST: ReservationController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(string id, IFormCollection collection)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace Resarvation.Controllers
         }
 
         // GET: ReservationController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             return View();
         }
@@ -149,7 +149,7 @@ namespace Resarvation.Controllers
         // POST: ReservationController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string id, IFormCollection collection)
         {
             try
             {
