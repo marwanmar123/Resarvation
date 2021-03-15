@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Resarvation.Data;
 using Resarvation.Models;
 using System;
@@ -16,11 +18,13 @@ namespace Resarvation.Controllers
     {
         ApplicationDbContext _db;
 
+
         public ReservationController(ApplicationDbContext db)
         {
             _db = db;
         }
 
+        [Authorize(Roles = "admin")]
         // GET: ReservationController
         public ActionResult Index()
         {
@@ -84,12 +88,7 @@ namespace Resarvation.Controllers
         // GET: ReservationController/Create
         public IActionResult Create()
         {
-            //var reservationType = _db.TypeReservations.Select(t => new SelectListItem
-            //{
-            //    Value = t.Id,
-            //    Text = t.Name
-            //});
-            //ViewBag.ResType = reservationType;
+
             ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name");
             return View();
         }
@@ -109,7 +108,7 @@ namespace Resarvation.Controllers
 
             };
 
-            //var typeId = new TypeReservation() { Id = viewModel.Name };
+
 
             var usId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -123,45 +122,45 @@ namespace Resarvation.Controllers
             await _db.SaveChangesAsync();
 
             ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservationId);
+
+
+
             return RedirectToAction(nameof(Index));
 
 
         }
 
         // GET: ReservationController/Edit/5
-        public async Task<ActionResult> Edit(string id)
+        public ActionResult Edit(string id, ReservApprenantViewModel viewModel)
         {
-            var find = _db.Reservations.Find(id);
-            if (find == null)
+            var res = _db.TypeReservations.Where(t => t.Id == viewModel.Id).FirstOrDefault();
+            if (res != null)
             {
-                return NotFound();
+                var vm = new ReservApprenantViewModel { Id = res.Id };
+
+                if (vm.Reservation != null)
+                {
+                    res.Id = vm.TypeReservationId;
+                }
             }
-
-            ViewBag.date = find.Date;
-            ViewBag.id = find.TypeReservationId;
-
-            return View();
+            ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name");
+            return View(res);
         }
 
         // POST: ReservationController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(string id, ReservApprenantViewModel viewModel)
+        public ActionResult Edit(ReservApprenantViewModel viewModel)
         {
-            var find = _db.Reservations.Find(id);
-            if (find == null)
-            {
-                return NotFound();
-            }
-            find.Id = viewModel.TypeReservationId;
-            find.Date = viewModel.Date;
+            var res = _db.TypeReservations.Where(t => t.Id == viewModel.Id).FirstOrDefault();
 
-            //var result = await _db.TypeReservations.UpdateAsync(viewModel);
-            //if (result.Succeeded)
-            //{
-            //    return RedirectToAction(nameof(Index));
-            //}
-            return View();
+            res.Id = viewModel.TypeReservationId;
+            res.Name = viewModel.Name;
+
+            //_db.Entry(res).State = EntityState.Modified;
+            _db.SaveChanges();
+            ViewData["type"] = new SelectList(_db.TypeReservations, "Id", "Name", viewModel.TypeReservationId);
+            return RedirectToAction(nameof(Index));
 
         }
 

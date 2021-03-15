@@ -15,5 +15,7 @@ namespace Resarvation.Models
         public string Cause { get; set; }
         public string TypeReservationId { get; set; }
         public string Name { get; set; }
+        public Reservation Reservation { get; set; }
+        public TypeReservation typeReservation { get; set; }
     }
 }
